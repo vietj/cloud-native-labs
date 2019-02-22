@@ -62,6 +62,10 @@
     </dependency>
     <dependency>
       <groupId>io.thorntail</groupId>
+      <artifactId>jpa</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.thorntail</groupId>
       <artifactId>microprofile-health</artifactId>
     </dependency>
     <dependency>

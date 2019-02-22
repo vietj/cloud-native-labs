@@ -17,6 +17,8 @@
         <vertx.verticle>com.redhat.cloudnative.gateway.GatewayVerticle</vertx.verticle>
         <fabric8.maven.plugin.version>3.5.40</fabric8.maven.plugin.version>
         <slf4j.version>1.7.21</slf4j.version>
+        <jaeger.version>0.27.0</jaeger.version>
+        <opentracing-vertx-web.version>0.1.0</opentracing-vertx-web.version>
     </properties>
 
     <repositories>
@@ -72,6 +74,22 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-service-discovery-bridge-kubernetes</artifactId>
+        </dependency>
+        <!-- Jaeger client for distributed tracing with opentracing-vertx-web -->
+        <dependency>
+            <groupId>com.uber.jaeger</groupId>
+            <artifactId>jaeger-core</artifactId>
+            <version>${jaeger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.uber.jaeger</groupId>
+            <artifactId>jaeger-micrometer</artifactId>
+            <version>${jaeger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.opentracing.contrib</groupId>
+            <artifactId>opentracing-vertx-web</artifactId>
+            <version>${opentracing-vertx-web.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
