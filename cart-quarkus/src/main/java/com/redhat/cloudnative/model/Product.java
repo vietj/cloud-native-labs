@@ -5,18 +5,18 @@ public class Product implements java.io.Serializable {
 
    private String itemId;
 	private String name;
-	private String desc;
+	private String description;
 	private double price;
 	
 	public Product() {
 		
 	}
 	
-	public Product(String itemId, String name, String desc, double price) {
+	public Product(String itemId, String name, String description, double price) {
 		super();
 		this.itemId = itemId;
 		this.name = name;
-		this.desc = desc;
+		this.description = description;
 		this.price = price;
 	}
 	public String getItemId() {
@@ -31,11 +31,11 @@ public class Product implements java.io.Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getDesc() {
-		return desc;
+	public String getDescription() {
+		return description;
 	}
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	public double getPrice() {
 		return price;
@@ -47,6 +47,6 @@ public class Product implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return "Product [itemId=" + itemId + ", name=" + name + ", desc="
-				+ desc + ", price=" + price + "]";
+				+ description + ", price=" + price + "]";
 	}
 }

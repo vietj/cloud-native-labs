@@ -15,7 +15,7 @@ import com.redhat.cloudnative.service.ShoppingCartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/cart")
+@Path("/api/cart")
 public class CartResource {
     private static final Logger LOG = LoggerFactory.getLogger(CartResource.class);
     

@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 import com.redhat.cloudnative.model.Product;
 import com.redhat.cloudnative.model.ShoppingCart;
 import com.redhat.cloudnative.model.ShoppingCartItem;
 
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +27,9 @@ public class ShoppingCartService {
 //    @Inject
 //    ShippingService ss;
 
-//    @Inject
-//    CatalogService catalogService;
+   @Inject
+   @RestClient
+   CatalogService catalogService;
 
 //    @Inject
 //    PromoService ps;
@@ -105,7 +110,7 @@ public class ShoppingCartService {
 
             //if product exist, create new product to reset price
             if (p != null) {
-                sci.setProduct(new Product(p.getItemId(), p.getName(), p.getDesc(), p.getPrice()));
+                sci.setProduct(new Product(p.getItemId(), p.getName(), p.getDescription(), p.getPrice()));
                 sci.setPrice(p.getPrice());
             }
 
@@ -114,15 +119,14 @@ public class ShoppingCartService {
     }
 
     public Product getProduct(String itemId) {
-//        if (!productMap.containsKey(itemId)) {
-//            // Fetch and cache products. 
-//            // TODO: Cache should expire at some point!
-//            List<Product> products = catalogService.products();
-//            productMap = products.stream().collect(Collectors.toMap(Product::getItemId, Function.identity()));
-//        }
-//
-//        return productMap.get(itemId);
-        return null;
+       if (!productMap.containsKey(itemId)) {
+           // Fetch and cache products. 
+           // TODO: Cache should expire at some point!
+           List<Product> products = catalogService.products();
+           productMap = products.stream().collect(Collectors.toMap(Product::getItemId, Function.identity()));
+       }
+
+       return productMap.get(itemId);
     }
 
     public ShoppingCart deleteItem(String cartId, String itemId, int quantity) {

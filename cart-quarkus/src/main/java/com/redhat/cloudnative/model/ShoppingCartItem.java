@@ -1,4 +1,4 @@
-/package com.redhat.cloudnative.model;
+package com.redhat.cloudnative.model;
 
 public class ShoppingCartItem implements java.io.Serializable {
     static final long serialVersionUID = 1L;

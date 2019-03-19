@@ -1,4 +1,4 @@
-uspackage com.redhat.cloudnative.service;
+package com.redhat.cloudnative.service;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 @RegisterRestClient
 public interface CatalogService {
     @GET
-    @Path("/api/products")
+    @Path("/api/catalog")
     @Produces("application/json")
     List<Product> products();
 }
