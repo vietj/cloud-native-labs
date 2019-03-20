@@ -1,10 +1,11 @@
 FROM golang:1.11
 
-RUN mkdir -p /go/src/github.com/mcouliba/cloud-native-labs/catalog-go
-WORKDIR /go/src/github.com/mcouliba/cloud-native-labs/catalog-go
+RUN mkdir /app
+WORKDIR /app
+COPY . /app
+RUN go build -o catalog-go .
 
-COPY . /go/src/github.com/mcouliba/cloud-native-labs/catalog-go
-RUN go build
-
+EXPOSE 8080 8888
 USER 1001
-CMD ["./catalog-go"]
+
+CMD ["/app/catalog-go"]
