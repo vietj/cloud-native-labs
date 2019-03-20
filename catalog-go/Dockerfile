@@ -1,10 +1,9 @@
 FROM golang:1.12
 
-ENV GOSRC ${GOPATH}/src
+WORKDIR /go/src/app
+COPY . /go/src/app
 
-RUN mkdir -p ${GOSRC}/catalog-go
-WORKDIR ${GOSRC}/catalog-go
-COPY . ${GOSRC}/catalog-go
-RUN go build
+RUN go get -d -v ./...
+RUN go install -v ./...
 
-CMD ["./catalog-go"]
+CMD ["app"]
