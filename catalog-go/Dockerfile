@@ -1,4 +1,4 @@
-FROM golang:1.12
+FROM eclipse/golang:1.12
 
 WORKDIR /go/src/app
 COPY . /go/src/app
