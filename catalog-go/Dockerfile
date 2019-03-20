@@ -1,6 +1,6 @@
 FROM golang:1.11
 
-RUN mkdir /app
+RUN sudo mkdir /app
 WORKDIR /app
 COPY . /app
 RUN go build -o catalog-go .
