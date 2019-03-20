@@ -1,11 +1,10 @@
-FROM golang:1.11
+FROM golang:1.12
 
-RUN sudo mkdir /app
-WORKDIR /app
-COPY . /app
-RUN go build -o catalog-go .
+ENV GOSRC ${GOPATH}/src
 
-EXPOSE 8080 8888
-USER 1001
+RUN mkdir -p ${GOSRC}/catalog-go
+WORKDIR ${GOSRC}/catalog-go
+COPY . ${GOSRC}/catalog-go
+RUN go build
 
-CMD ["/app/catalog-go"]
+CMD ["./catalog-go"]
