@@ -1,10 +1,8 @@
 package com.redhat.cloudnative.gateway;
 
-import io.opentracing.Span;
-import io.opentracing.Tracer;
-import com.uber.jaeger.Configuration;
-import com.uber.jaeger.micrometer.MicrometerMetricsFactory;
-import com.uber.jaeger.samplers.ConstSampler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -18,8 +16,6 @@ import io.vertx.rxjava.ext.web.handler.CorsHandler;
 import io.vertx.rxjava.ext.web.handler.StaticHandler;
 import io.vertx.rxjava.servicediscovery.ServiceDiscovery;
 import io.vertx.rxjava.servicediscovery.types.HttpEndpoint;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.Single;
 
@@ -28,15 +24,20 @@ public class GatewayVerticle extends AbstractVerticle {
 
     private WebClient catalog;
     private WebClient inventory;
+    private WebClient cart;
 
     @Override
     public void start() {
         Router router = Router.router(vertx);
-        router.route().handler(TracingInterceptor.create());
-        router.route().handler(CorsHandler.create("*").allowedMethod(HttpMethod.GET));
+        router.route().order(-1)
+            .handler(TracingInterceptor.create());
+        router.route()
+            .handler(CorsHandler.create("*")
+                .allowedMethod(HttpMethod.GET));
         router.get("/*").handler(StaticHandler.create("assets"));
         router.get("/health").handler(ctx -> ctx.response().end(new JsonObject().put("status", "UP").toString()));
         router.get("/api/products").handler(this::products);
+        router.get("/api/cart/:cardId").handler(this::getCartHandler);
 
         ServiceDiscovery.create(vertx, discovery -> {
             // Catalog lookup
@@ -52,19 +53,28 @@ public class GatewayVerticle extends AbstractVerticle {
                     .onErrorReturn(t -> WebClient.create(vertx, new WebClientOptions()
                             .setDefaultHost(System.getProperty("inventory.api.host", "localhost"))
                             .setDefaultPort(Integer.getInteger("inventory.api.port", 9001))));
-        
+            
+            // Cart lookup
+            Single<WebClient> cartDiscoveryRequest = HttpEndpoint.rxGetWebClient(discovery,
+                    rec -> rec.getName().equals("cart"))
+                    .onErrorReturn(t -> WebClient.create(vertx, new WebClientOptions()
+                            .setDefaultHost(System.getProperty("inventory.api.host", "localhost"))
+                            .setDefaultPort(Integer.getInteger("inventory.api.port", 9002))));
+                            
             // Zip all 3 requests
-            Single.zip(catalogDiscoveryRequest, inventoryDiscoveryRequest, (c, i) -> {
-                // When everything is done
-                catalog = c;
-                inventory = i;
-                return vertx.createHttpServer()
-                    .requestHandler(router::accept)
-                    .listen(Integer.getInteger("http.port", 8080));
-            }).subscribe();
+            Single.zip(catalogDiscoveryRequest, inventoryDiscoveryRequest, cartDiscoveryRequest, 
+                (cg, i, ct) -> {
+                    // When everything is done
+                    catalog = cg;
+                    inventory = i;
+                    cart = ct;
+                    return vertx.createHttpServer()
+                        .requestHandler(router::accept)
+                        .listen(Integer.getInteger("http.port", 8080));
+                }).subscribe();
         });
     }
-
+    
     private void products(RoutingContext rc) {
         // Retrieve catalog
         TracingInterceptor.propagate(catalog, rc)
@@ -89,6 +99,7 @@ public class GatewayVerticle extends AbstractVerticle {
                                             product.getString("itemId"), resp.statusCode());
                                     return product.copy();
                                 }
+                                
                                 return product.copy().put("availability", 
                                     new JsonObject().put("quantity", resp.body().getInteger("quantity")));
                             }))
@@ -96,6 +107,25 @@ public class GatewayVerticle extends AbstractVerticle {
             )
             .subscribe(
                 list -> rc.response().end(Json.encodePrettily(list)),
+                error -> rc.response().end(new JsonObject().put("error", error.getMessage()).toString())
+            );
+    }
+    
+    private void getCartHandler(RoutingContext rc) {
+        String cardId = rc.request().getParam("cardId");
+        
+        // Retrieve catalog
+        TracingInterceptor.propagate(cart, rc)
+            .get("/api/cart/" + cardId)
+            .as(BodyCodec.jsonObject())
+            .rxSend()
+            .subscribe(
+                resp -> {
+                    if (resp.statusCode() != 200) {
+                        new RuntimeException("Invalid response from the cart: " + resp.statusCode());
+                    }
+                    rc.response().end(Json.encodePrettily(resp.body()));
+                },
                 error -> rc.response().end(new JsonObject().put("error", error.getMessage()).toString())
             );
     }
