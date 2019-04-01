@@ -17,7 +17,7 @@
         <vertx.verticle>com.redhat.cloudnative.gateway.GatewayVerticle</vertx.verticle>
         <fabric8.maven.plugin.version>3.5.40</fabric8.maven.plugin.version>
         <slf4j.version>1.7.21</slf4j.version>
-        <jaeger.version>0.34.0</jaeger.version>
+        <jaeger.version>0.27.0.redhat-4</jaeger.version>
         <opentracing-vertx-web.version>0.1.0</opentracing-vertx-web.version>
     </properties>
 
@@ -79,12 +79,12 @@
         <dependency>
             <groupId>io.jaegertracing</groupId>
             <artifactId>jaeger-client</artifactId>
-            <version>${jaeger.version}</version>
+            <version>0.30.6.redhat-00001</version>
         </dependency>
         <dependency>
-            <groupId>com.uber.jaeger</groupId>
+            <groupId>io.jaegertracing</groupId>
             <artifactId>jaeger-micrometer</artifactId>
-            <version>${jaeger.version}</version>
+            <version>0.27.0.redhat-4</version>
         </dependency>
         <dependency>
             <groupId>io.opentracing.contrib</groupId>
