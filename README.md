@@ -1,45 +1,31 @@
-# Cloud Native Roadshow Labs  [![Build Status](https://travis-ci.org/openshift-labs/cloud-native-labs.svg?branch=ocp-3.11)](https://travis-ci.org/openshift-labs/cloud-native-labs)
 
-This is a one-day hands-on lab experience for bulding Cloud Native applications using 
-Red Hat OpenShift Application Runtimes (Spring Boot, WildFly Swarm, Eclipse Vert.x and Node.js) 
-utilizing a microservices architecture.
+![Red Hat Summit]({% image_path redhatsummit2019.jpg %}){:width="300px"}
 
+# Debugging microservices applications on Red Hat OpenShift
 
-## CoolStore Online Store App
+[![Contribute]({% image_path factory-contribute.svg %})](/f?url=https://github.com/mcouliba/cloud-native-labs/tree/debugging)
 
-CoolStore is an online store web application built using Spring Boot, WildFly Swarm, Eclipse Vert.x, 
-Node.js and AngularJS adopting the microservices architecture.
+## Purpose
 
-* **Web**: A Node.js/Angular front-end
-* **API Gateway**: aggregates API calls to back-end services and provides a condenses REST API for front-end
-* **Catalog**: a REST API for the product catalog and product information
-* **Inventory**: a REST API for product's inventory status
+As microservices-based applications become more prevalent, both the number of
+and complexity of their interactions increases. Up until now much of the burden
+of managing these complex microservices interactions has been placed on the
+application developer, with different or non-existent support for microservice
+concepts depending on language and framework.
 
-```
-                    +-------------+
-                    |             |
-                    |     Web     |
-                    |             |
-                    |   Node.js   |
-                    |  AngularJS  |
-                    +------+------+
-                          |
-                          v
-                    +------+------+
-                    |             |
-                    | API Gateway |
-                    |             |
-                    |   Vert.x    |
-                    |             |
-                    +------+------+
-                          |
-                +---------+---------+
-                v                   v
-          +------+------+     +------+------+
-          |             |     |             |
-          |   Catalog   |     |  Inventory  |
-          |             |     |             |
-          | Spring Boot |     |WildFly Swarm|
-          |             |     |             |
-          +-------------+     +-------------+
-```
+Deploying and managing microservices architecture is becoming easier with a 
+container orchestration platform like Openshift. So now, critical questions
+ is raising: How do you debug a distributed system and how do you ensure 
+the good health of your application? Debugging microservices architecture is hard. 
+The state of the application is spread through multiple microservices which makes 
+more complicated to get a global overview for debugging purposes.
+
+## Background
+This hands-on workshop will introduce and help you to get familiar with the common 
+tracing/debugging techniques using Jaeger/OpenTracing, Istio, Kiali and Squash in 
+a microservice context
+
+# Agenda
+* Kiali / Istio
+* Opentracing - Jaeger
+* Realtime Debugging with Squash
