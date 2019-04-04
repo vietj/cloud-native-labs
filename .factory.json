@@ -1,0 +1,128 @@
+{
+    "v": "4.0",
+    "name": "debugging-microservices",
+    "workspace": {
+      "defaultEnv": "default",
+      "environments": {
+        "default": {
+          "machines": {
+            "dev-machine": {
+              "attributes": {
+                "memoryLimitBytes": "2147483648"
+              },
+              "servers": {},
+              "volumes": {},
+              "installers": [
+                "org.eclipse.che.exec",
+                "org.eclipse.che.terminal",
+                "org.eclipse.che.ws-agent",
+                "org.eclipse.che.ls.java"
+              ],
+              "env": {
+                "MAVEN_OPTS": "-Xmx512m",
+                "MAVEN_MIRROR_URL": "http://nexus:8081/repository/maven-all-public",
+                "OPENSHIFT_CONSOLE_URL": "https://master.nantes-60eb.openshiftworkshop.com/"
+              }
+            }
+          },
+          "recipe": {
+            "type": "dockerimage",
+            "content": "quay.io/mcouliba/che-cloud-native"
+          }
+        }
+      },
+      "projects": [
+        {
+          "links": [],
+          "name": "labs",
+          "attributes": {},
+          "type": "blank",
+          "source": {
+            "location": "https://github.com/mcouliba/cloud-native-labs/archive/debugging.zip",
+            "type": "zip",
+            "parameters": {
+              "skipFirstLevel": "true"
+            }
+          },
+          "path": "/labs",
+          "problems": [],
+          "mixins": []
+        },
+        {
+          "links": [],
+          "name": "gateway-vertx",
+          "attributes": {},
+          "type": "maven",
+          "source": {
+            "parameters": {}
+          },
+          "path": "/labs/gateway-vertx",
+          "problems": [],
+          "mixins": []
+        },
+        {
+          "links": [],
+          "name": "inventory-thorntail",
+          "attributes": {},
+          "type": "maven",
+          "source": {
+            "parameters": {}
+          },
+          "path": "/labs/inventory-thorntail",
+          "problems": [],
+          "mixins": []
+        },
+        {
+          "links": [],
+          "name": "cart-quarkus",
+          "attributes": {},
+          "type": "maven",
+          "source": {
+            "parameters": {}
+          },
+          "path": "/labs/cart-quarkus",
+          "problems": [],
+          "mixins": []
+        },
+        {
+          "links": [],
+          "name": "catalog-spring-boot",
+          "attributes": {},
+          "type": "maven",
+          "source": {
+            "parameters": {}
+          },
+          "path": "/labs/catalog-spring-boot",
+          "problems": [],
+          "mixins": []
+        }
+      ],
+      "name": "wksp-debugging",
+      "attributes": {},
+      "commands": [
+        {
+          "commandLine": "username=${workspace.namespace}\nprojectname=coolstore${username#user}\noc login ${OPENSHIFT_CONSOLE_URL} -u ${username} -p openshift --insecure-skip-tls-verify\noc project ${projectname}\necho \"-----------\"\necho \"Successful Connected to OpenShift as ${username}\"\necho \"-----------\"",
+          "name": "oc login",
+          "attributes": {
+            "goal": "OpenShift",
+            "previewUrl": ""
+          },
+          "type": "custom"
+        },
+        {
+          "commandLine": "oc create -f https://raw.githubusercontent.com/dwojciec/debugging-lab-summit-2019/master/openshift/coolstore.yml && \\\noc start-build catalog-s2i --from-dir /projects/labs/catalog-spring-boot/ && \\\noc start-build inventory-s2i --from-dir /projects/labs/inventory-thorntail/ --follow && \\\noc start-build gateway-s2i --from-dir /projects/labs/gateway-vertx/ && \\\noc start-build web --from-dir /projects/labs/web-nodejs/",
+          "name": "Build Mysterious Application",
+          "attributes": {
+            "goal": "Build"
+          },
+          "type": "custom"
+        }
+      ],
+      "links": []
+    },
+    "creator": {
+      "name": "mcouliba",
+      "email": "mcouliba@redhat.com",
+      "created": 1554319574589
+    }
+  }  
