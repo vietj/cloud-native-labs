@@ -1,9 +1,9 @@
 
-![Red Hat Summit]({% image_path redhatsummit2019.jpg %}){:width="300px"}
+![Red Hat Summit](images/redhatsummit2019.jpg){:width="300px"}
 
 # Debugging microservices applications on Red Hat OpenShift
 
-[![Contribute]({% image_path factory-contribute.svg %})](/f?url=https://github.com/mcouliba/cloud-native-labs/tree/debugging)
+[![Contribute](images/factory-contribute.svg)](/f?url=https://github.com/mcouliba/cloud-native-labs/tree/debugging)
 
 ## Purpose
 
