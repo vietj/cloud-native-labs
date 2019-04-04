@@ -1,5 +1,5 @@
 
-![Red Hat Summit](images/redhatsummit2019.jpg =200x)
+![Red Hat Summit](images/redhatsummit2019.jpg)
 
 # Debugging microservices applications on Red Hat OpenShift
 
