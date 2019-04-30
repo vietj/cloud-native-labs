@@ -35,7 +35,7 @@ public class InventoryVerticle extends AbstractVerticle {
 
     Single<HttpServer> serverSingle = vertx.createHttpServer()
         .requestHandler(router)
-        .rxListen(Integer.getInteger("http.port", 8080));
+        .rxListen(Integer.getInteger("http.port", 9001));
 
     ConfigRetrieverOptions configOptions = new ConfigRetrieverOptions()
         .addStore(new ConfigStoreOptions()
